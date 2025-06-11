@@ -15,7 +15,17 @@
     "PAGE_CONTENT": {
         "SIGNUP_PAGE": {
             "CREATE_FIRA_ACCOUNT": "Create a fira account now -- it's fee and easy!",
-            "CREATE_ACCOUNT": "Create Account"
+            "CREATE_ACCOUNT": "Create Account",
+            "MESSAGES": {
+                "TITLES": {
+                    "SUCCESS": "Signup successful",
+                    "ERROR": "Signup failed"
+                },
+                "BODIES": {
+                    "SUCCESS": "Signup has been successful, you'll be redirected to the login page shortly.",
+                    "ERROR": "Signup up has failed, please try again later."
+                }
+            }
         }
     }
 }

@@ -23,7 +23,6 @@
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "types": ["vitest/globals", "node"]
-
     },
     "angularCompilerOptions": {
         "enableI18nLegacyMessageIdFormat": false,
@@ -32,5 +31,9 @@
         "strictTemplates": true
     },
     "include": ["src"],
-    "files": ["src/custom-typings.d.ts", "node_modules/vitest/globals.d.ts", "src/test-setup.ts"]
+    "files": [
+        "src/custom-typings.d.ts",
+        "node_modules/vitest/globals.d.ts",
+        "src/test-setup.ts"
+    ]
 }

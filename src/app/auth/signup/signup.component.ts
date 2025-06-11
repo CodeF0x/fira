@@ -11,10 +11,12 @@ import { Password } from 'primeng/password';
 import { SignupForm, SignupFormFieldNames } from './signup.form';
 import { FloatLabel } from 'primeng/floatlabel';
 import { Tooltip } from 'primeng/tooltip';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ExtractFirstErrorPipe } from '../../shared/extract-first-error.pipe';
 import { SignUpPayload, SignUpService } from './login.service';
 import { Router } from '@angular/router';
+import { Toast, ToastCloseEvent } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
     selector: 'app-signup',
@@ -27,8 +29,9 @@ import { Router } from '@angular/router';
         Tooltip,
         TranslatePipe,
         ExtractFirstErrorPipe,
+        Toast,
     ],
-    providers: [SignUpService],
+    providers: [SignUpService, MessageService],
     templateUrl: './signup.component.html',
     styleUrl: './signup.component.scss',
 })
@@ -57,6 +60,9 @@ export class SignupComponent {
 
     private readonly _signUpService: SignUpService = inject(SignUpService);
     private readonly _router: Router = inject(Router);
+    private readonly _messageService: MessageService = inject(MessageService);
+    private readonly _translateService: TranslateService =
+        inject(TranslateService);
 
     onSignup(): void {
         const payload: SignUpPayload = {
@@ -66,8 +72,37 @@ export class SignupComponent {
         };
 
         this._signUpService.signUp(payload).subscribe({
-            next: () => this._router.navigate(['/login']),
-            error: () => alert('Oopsie whoopsie >w<'),
+            next: () => {
+                this._messageService.add({
+                    id: 'success-message',
+                    severity: 'success',
+                    summary: this._translateService.instant(
+                        'PAGE_CONTENT.SIGNUP_PAGE.MESSAGES.TITLES.SUCCESS',
+                    ),
+                    detail: this._translateService.instant(
+                        'PAGE_CONTENT.SIGNUP_PAGE.MESSAGES.BODIES.ERROR',
+                    ),
+                    life: 3000,
+                });
+            },
+            error: () => {
+                this._messageService.add({
+                    severity: 'error',
+                    summary: this._translateService.instant(
+                        'PAGE_CONTENT.SIGNUP_PAGE.MESSAGES.TITLES.ERROR',
+                    ),
+                    detail: this._translateService.instant(
+                        'PAGE_CONTENT.SIGNUP_PAGE.MESSAGES.BODIES.ERROR',
+                    ),
+                    sticky: true,
+                });
+            },
         });
+    }
+
+    onMessageClose(event: ToastCloseEvent): void {
+        if (event.message.id === 'success-message') {
+            this._router.navigate(['/login']);
+        }
     }
 }

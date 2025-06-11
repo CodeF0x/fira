@@ -3,7 +3,7 @@ import { Observable, take } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Config } from '../../core/config';
 
-interface SignUpResponse {
+export interface SignUpResponse {
     display_name: string;
     password: string;
     email: string;
