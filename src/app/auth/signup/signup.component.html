@@ -1,0 +1,68 @@
+<div class="min-h-screen flex flex-col items-center justify-center">
+    <img
+        src="fira-logo-full.png"
+        title="Fira Logo"
+        alt="Fira Logo"
+        class="mb-20"
+    />
+    <p class="text-lg">
+        {{ "PAGE_CONTENT.SIGNUP_PAGE.CREATE_FIRA_ACCOUNT" | translate }}
+    </p>
+    <form [formGroup]="form" class="w-full max-w-md p-6 flex flex-col gap-4">
+        <p-floatlabel variant="in">
+            @let emailControl = form.controls[SignupFormFieldNames.EMAIL];
+            <input
+                id="email"
+                type="email"
+                [pTooltip]="
+                    emailControl.errors
+                        | extractFirstError: { maxAmount: 128, minAmount: 3 }
+                "
+                pInputText
+                [formControlName]="SignupFormFieldNames.EMAIL"
+                class="w-full"
+            />
+            <label for="email">{{ "COMMON.EMAIL" | translate }}</label>
+        </p-floatlabel>
+
+        <p-floatlabel variant="in">
+            @let usernameControl = form.controls[SignupFormFieldNames.USERNAME];
+            <input
+                id="username"
+                type="text"
+                pInputText
+                [pTooltip]="
+                    usernameControl.errors
+                        | extractFirstError: { maxAmount: 128, minAmount: 3 }
+                "
+                [formControlName]="SignupFormFieldNames.USERNAME"
+                class="w-full"
+            />
+            <label for="username">{{ "COMMON.USERNAME" | translate }}</label>
+        </p-floatlabel>
+
+        <p-floatlabel variant="in">
+            @let passwordControl = form.controls[SignupFormFieldNames.PASSWORD];
+            <p-password
+                id="password"
+                [pTooltip]="
+                    passwordControl.errors
+                        | extractFirstError: { maxAmount: 128, minAmount: 3 }
+                "
+                [formControlName]="SignupFormFieldNames.PASSWORD"
+                class="w-full"
+                inputStyleClass="w-full"
+                styleClass="w-full"
+            />
+            <label for="password">{{ "COMMON.PASSWORD" | translate }}</label>
+        </p-floatlabel>
+
+        <div class="flex justify-center">
+            <p-button
+                [label]="'PAGE_CONTENT.SIGNUP_PAGE.CREATE_ACCOUNT' | translate"
+                (click)="onSignup()"
+                [disabled]="!form.valid"
+            />
+        </div>
+    </form>
+</div>

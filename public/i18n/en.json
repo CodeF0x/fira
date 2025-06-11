@@ -1,0 +1,21 @@
+{
+    "FORM": {
+        "VALIDATION": {
+            "REQUIRED": "This field is required",
+            "EMAIL": "Please enter a valid email address",
+            "MINLENGTH": "Please enter at least {{minAmount}} characters",
+            "MAXLENGTH": "Please enter no more than {{maxAmount}} characters"
+        }
+    },
+    "COMMON": {
+        "EMAIL": "Email",
+        "USERNAME": "Username",
+        "PASSWORD": "Password"
+    },
+    "PAGE_CONTENT": {
+        "SIGNUP_PAGE": {
+            "CREATE_FIRA_ACCOUNT": "Create a fira account now -- it's fee and easy!",
+            "CREATE_ACCOUNT": "Create Account"
+        }
+    }
+}
