@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { CookieService } from '../shared/services/cookie.service';
 
 @Injectable({ providedIn: 'root' })
 export class Session {
@@ -7,9 +8,10 @@ export class Session {
 
     private readonly _jwtHelperService: JwtHelperService =
         inject(JwtHelperService);
+    private readonly _cookieService: CookieService = inject(CookieService);
 
     constructor() {
-        this.userToken = this._loadTokenFromCookie();
+        this.userToken = this._cookieService.loadTokenFromCookie();
     }
 
     isSessionValid(): boolean {
@@ -17,12 +19,5 @@ export class Session {
             return false;
         }
         return this._jwtHelperService.isTokenExpired(this.userToken);
-    }
-
-    private _loadTokenFromCookie(): Maybe<string> {
-        const match: Maybe<RegExpMatchArray> = document.cookie.match(
-            /(^| )cira-bearer-token=([^;]+)/,
-        );
-        return match ? decodeURIComponent(match[2]) : null;
     }
 }

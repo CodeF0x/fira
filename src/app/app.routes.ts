@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { hasValidSessionGuard } from './shared/guards/has-valid-session.guard';
 import { hasInvalidOrNoSessionGuard } from './shared/guards/has-invalid-or-no-session.guard';
+import { LoginComponent } from './auth/login/login.component';
+import { SignupComponent } from './auth/signup/signup.component';
 
 export const routes: Routes = [
     {
@@ -13,18 +15,12 @@ export const routes: Routes = [
     },
     {
         path: 'login',
-        loadComponent: () =>
-            import('./auth/login/login.component').then(
-                (c) => c.LoginComponent,
-            ),
+        component: LoginComponent,
         canActivate: [hasInvalidOrNoSessionGuard],
     },
     {
         path: 'signup',
-        loadComponent: () =>
-            import('./auth/signup/signup.component').then(
-                (c) => c.SignupComponent,
-            ),
+        component: SignupComponent,
         canActivate: [hasInvalidOrNoSessionGuard],
     },
 ];

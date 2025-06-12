@@ -57,12 +57,13 @@
             <label for="password">{{ "COMMON.PASSWORD" | translate }}</label>
         </p-floatlabel>
 
-        <div class="flex justify-center">
+        <div class="flex flex-col items-center gap-4">
             <p-button
                 [label]="'PAGE_CONTENT.SIGNUP_PAGE.CREATE_ACCOUNT' | translate"
                 (click)="onSignup()"
                 [disabled]="!form.valid"
             />
+            <a [routerLink]="['/login']" class="text-sm text-[#34d399] hover:text-[#2bb382]">{{ 'PAGE_CONTENT.SIGNUP_PAGE.LOGIN_LINK' | translate }}</a>
         </div>
     </form>
 </div>

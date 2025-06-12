@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SignupComponent } from './signup.component';
 import { MockBuilder } from 'ng-mocks';
-import { SignUpResponse, SignUpService } from './login.service';
+import { SignUpResponse, SignUpService } from './signup.service';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
@@ -52,17 +52,17 @@ describe('SignupComponent', () => {
         it('should show success message on successful signup', () => {
             component.onSignup();
 
-            expect(signUpService.signUp).toHaveBeenCalledWith({
-                display_name: 'testuser',
-                password: 'testpass',
-                email: 'test@example.com',
-            });
+            expect(signUpService.signUp).toHaveBeenCalledWith(
+                'testuser',
+                'test@example.com',
+                'testpass',
+            );
 
             expect(messageService.add).toHaveBeenCalledWith({
                 id: 'success-message',
                 severity: 'success',
                 summary: 'PAGE_CONTENT.SIGNUP_PAGE.MESSAGES.TITLES.SUCCESS',
-                detail: 'PAGE_CONTENT.SIGNUP_PAGE.MESSAGES.BODIES.ERROR',
+                detail: 'PAGE_CONTENT.SIGNUP_PAGE.MESSAGES.BODIES.SUCCESS',
                 life: 3000,
             });
         });

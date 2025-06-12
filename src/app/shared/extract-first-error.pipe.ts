@@ -16,7 +16,7 @@ export class ExtractFirstErrorPipe implements PipeTransform {
 
     transform(
         errors: ValidationErrors | null,
-        options: ExtractFirstErrorOptions,
+        options?: Maybe<ExtractFirstErrorOptions>,
     ): string {
         if (!errors) {
             return '';
@@ -24,7 +24,7 @@ export class ExtractFirstErrorPipe implements PipeTransform {
 
         return this._translateService.instant(
             `FORM.VALIDATION.${Object.keys(errors)[0].toUpperCase()}`,
-            options,
+            options ?? {},
         );
     }
 }

@@ -13,7 +13,22 @@
         "PASSWORD": "Password"
     },
     "PAGE_CONTENT": {
+        "LOGIN_PAGE": {
+            "BUTTON": "Login",
+            "LOGIN_TEXT": "Login to your fira account.",
+            "SIGNUP_LINK": "Don't have an account? Signup now!",
+            "MESSAGES": {
+                "TITLES": {
+                    "ERROR": "Login failed"
+                },
+                "BODIES": {
+                    "WRONG_CREDENTIALS": "Wrong password or email, please try again.",
+                    "ERROR": "Login has failed, please try again later."
+                }
+            }
+        },
         "SIGNUP_PAGE": {
+            "LOGIN_LINK": "Already have an account? Login now!",
             "CREATE_FIRA_ACCOUNT": "Create a fira account now -- it's fee and easy!",
             "CREATE_ACCOUNT": "Create Account",
             "MESSAGES": {

@@ -13,10 +13,11 @@ import { FloatLabel } from 'primeng/floatlabel';
 import { Tooltip } from 'primeng/tooltip';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ExtractFirstErrorPipe } from '../../shared/extract-first-error.pipe';
-import { SignUpPayload, SignUpService } from './login.service';
-import { Router } from '@angular/router';
+import { SignUpService } from './signup.service';
+import { Router, RouterLink } from '@angular/router';
 import { Toast, ToastCloseEvent } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { catchError, EMPTY } from 'rxjs';
 
 @Component({
     selector: 'app-signup',
@@ -30,6 +31,7 @@ import { MessageService } from 'primeng/api';
         TranslatePipe,
         ExtractFirstErrorPipe,
         Toast,
+        RouterLink,
     ],
     providers: [SignUpService, MessageService],
     templateUrl: './signup.component.html',
@@ -65,14 +67,34 @@ export class SignupComponent {
         inject(TranslateService);
 
     onSignup(): void {
-        const payload: SignUpPayload = {
-            display_name: this.form.value[SignupFormFieldNames.USERNAME]!,
-            password: this.form.value[SignupFormFieldNames.PASSWORD]!,
-            email: this.form.value[SignupFormFieldNames.EMAIL]!,
-        };
+        if (!this.form.valid) {
+            return;
+        }
 
-        this._signUpService.signUp(payload).subscribe({
-            next: () => {
+        const display_name: string =
+            this.form.value[SignupFormFieldNames.USERNAME]!;
+        const email: string = this.form.value[SignupFormFieldNames.EMAIL]!;
+        const password: string =
+            this.form.value[SignupFormFieldNames.PASSWORD]!;
+
+        this._signUpService
+            .signUp(display_name, email, password)
+            .pipe(
+                catchError((_error) => {
+                    this._messageService.add({
+                        severity: 'error',
+                        summary: this._translateService.instant(
+                            'PAGE_CONTENT.SIGNUP_PAGE.MESSAGES.TITLES.ERROR',
+                        ),
+                        detail: this._translateService.instant(
+                            'PAGE_CONTENT.SIGNUP_PAGE.MESSAGES.BODIES.ERROR',
+                        ),
+                        sticky: true,
+                    });
+                    return EMPTY;
+                }),
+            )
+            .subscribe(() =>
                 this._messageService.add({
                     id: 'success-message',
                     severity: 'success',
@@ -80,24 +102,11 @@ export class SignupComponent {
                         'PAGE_CONTENT.SIGNUP_PAGE.MESSAGES.TITLES.SUCCESS',
                     ),
                     detail: this._translateService.instant(
-                        'PAGE_CONTENT.SIGNUP_PAGE.MESSAGES.BODIES.ERROR',
+                        'PAGE_CONTENT.SIGNUP_PAGE.MESSAGES.BODIES.SUCCESS',
                     ),
                     life: 3000,
-                });
-            },
-            error: () => {
-                this._messageService.add({
-                    severity: 'error',
-                    summary: this._translateService.instant(
-                        'PAGE_CONTENT.SIGNUP_PAGE.MESSAGES.TITLES.ERROR',
-                    ),
-                    detail: this._translateService.instant(
-                        'PAGE_CONTENT.SIGNUP_PAGE.MESSAGES.BODIES.ERROR',
-                    ),
-                    sticky: true,
-                });
-            },
-        });
+                }),
+            );
     }
 
     onMessageClose(event: ToastCloseEvent): void {
