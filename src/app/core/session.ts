@@ -18,6 +18,6 @@ export class Session {
         if (!this.userToken) {
             return false;
         }
-        return this._jwtHelperService.isTokenExpired(this.userToken);
+        return !this._jwtHelperService.isTokenExpired(this.userToken);
     }
 }

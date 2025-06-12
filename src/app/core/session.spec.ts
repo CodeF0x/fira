@@ -65,10 +65,10 @@ describe('Session', () => {
             expect(jwtHelperService.isTokenExpired).not.toHaveBeenCalled();
         });
 
-        it('should check token expiration when token exists', () => {
+        it('should return true when token exists and is not expired', () => {
             service.userToken = 'test-token';
             // @ts-expect-error vitest does not understand that a boolean is returned instead of a Promise
-            vi.spyOn(jwtHelperService, 'isTokenExpired').mockReturnValue(true);
+            vi.spyOn(jwtHelperService, 'isTokenExpired').mockReturnValue(false);
 
             const result = service.isSessionValid();
 
@@ -78,10 +78,10 @@ describe('Session', () => {
             expect(result).toBe(true);
         });
 
-        it('should return jwt helper service result when token exists', () => {
+        it('should return false if token exists and is expired', () => {
             service.userToken = 'test-token';
             // @ts-expect-error vitest does not understand that a boolean is returned instead of a Promise
-            vi.spyOn(jwtHelperService, 'isTokenExpired').mockReturnValue(false);
+            vi.spyOn(jwtHelperService, 'isTokenExpired').mockReturnValue(true);
 
             const result = service.isSessionValid();
 

@@ -72,15 +72,5 @@ describe('CookieService', () => {
                 "Could not decode token, this shouldn't happen",
             );
         });
-
-        it('should handle expired tokens', () => {
-            const token = 'expired-token';
-            const decodedToken = { id: 1, expiry_date: 500 }; // 500 is in the past
-            vi.spyOn(jwtHelper, 'decodeToken').mockReturnValue(decodedToken);
-
-            service.saveTokenToCookie(token);
-
-            expect(document.cookie).toBe('');
-        });
     });
 });

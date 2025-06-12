@@ -13,17 +13,18 @@ export class CookieService {
     }
 
     saveTokenToCookie(token: string): void {
-        const decodedToken: Maybe<{ id: number; expiry_date: number }> =
+        const decodedToken: Maybe<{ id: number; exp: number }> =
             this._jwtHelper.decodeToken(token);
 
         if (!decodedToken) {
             throw new Error("Could not decode token, this shouldn't happen");
         }
 
-        const exp: number = decodedToken.expiry_date;
+        const exp: number = decodedToken.exp;
 
         const now: number = Math.floor(Date.now() / 1000);
         const maxAge: number = exp - now;
+        console.log(maxAge);
 
         document.cookie = `cira-bearer-token=${token}; path=/; max-age=${maxAge}; SameSite=Lax`;
     }
