@@ -22,31 +22,12 @@ describe('Session', () => {
 
     describe('constructor', () => {
         it('should load token from cookie on initialization', () => {
-            const mockToken: string = 'test-token';
-
             cookieService = TestBed.inject(CookieService);
-            vi.spyOn(cookieService, 'loadTokenFromCookie').mockReturnValue(
-                mockToken,
-            );
+            vi.spyOn(cookieService, 'loadTokenFromCookie');
 
             service = TestBed.inject(Session);
 
             expect(cookieService.loadTokenFromCookie).toHaveBeenCalled();
-            expect(service.userToken).toBe(mockToken);
-        });
-
-        it('should handle null token from cookie', () => {
-            const mockToken: null = null;
-
-            cookieService = TestBed.inject(CookieService);
-            vi.spyOn(cookieService, 'loadTokenFromCookie').mockReturnValue(
-                mockToken,
-            );
-
-            service = TestBed.inject(Session);
-
-            expect(cookieService.loadTokenFromCookie).toHaveBeenCalled();
-            expect(service.userToken).toBeNull();
         });
     });
 
@@ -57,7 +38,7 @@ describe('Session', () => {
         });
 
         it('should return false when no token exists', () => {
-            service.userToken = null;
+            service.setNewToken(null);
 
             const result = service.isSessionValid();
 
@@ -66,7 +47,7 @@ describe('Session', () => {
         });
 
         it('should return true when token exists and is not expired', () => {
-            service.userToken = 'test-token';
+            service.setNewToken('test-token');
             // @ts-expect-error vitest does not understand that a boolean is returned instead of a Promise
             vi.spyOn(jwtHelperService, 'isTokenExpired').mockReturnValue(false);
 
@@ -79,7 +60,7 @@ describe('Session', () => {
         });
 
         it('should return false if token exists and is expired', () => {
-            service.userToken = 'test-token';
+            service.setNewToken('test-token');
             // @ts-expect-error vitest does not understand that a boolean is returned instead of a Promise
             vi.spyOn(jwtHelperService, 'isTokenExpired').mockReturnValue(true);
 

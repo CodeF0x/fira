@@ -1,23 +1,35 @@
-import { inject, Injectable } from '@angular/core';
+import {
+    computed,
+    inject,
+    Injectable,
+    Signal,
+    signal,
+    WritableSignal,
+} from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CookieService } from '../shared/services/cookie.service';
 
 @Injectable({ providedIn: 'root' })
 export class Session {
-    userToken: Maybe<string>;
+    readonly isSessionValid: Signal<boolean> = computed(() => {
+        if (!this._userToken()) {
+            return false;
+        }
+        return !this._jwtHelperService.isTokenExpired(this._userToken()!);
+    });
 
     private readonly _jwtHelperService: JwtHelperService =
         inject(JwtHelperService);
     private readonly _cookieService: CookieService = inject(CookieService);
 
+    private readonly _userToken: WritableSignal<Maybe<string>> = signal(null);
+
     constructor() {
-        this.userToken = this._cookieService.loadTokenFromCookie();
+        this._userToken.set(this._cookieService.loadTokenFromCookie());
     }
 
-    isSessionValid(): boolean {
-        if (!this.userToken) {
-            return false;
-        }
-        return !this._jwtHelperService.isTokenExpired(this.userToken);
+    setNewToken(token: Maybe<string>): void {
+        this._userToken.set(token);
+        this._cookieService.saveTokenToCookie(token);
     }
 }

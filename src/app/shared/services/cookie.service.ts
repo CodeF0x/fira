@@ -12,7 +12,12 @@ export class CookieService {
         return match ? decodeURIComponent(match[2]) : null;
     }
 
-    saveTokenToCookie(token: string): void {
+    saveTokenToCookie(token: Maybe<string>): void {
+        if (!token) {
+            document.cookie = `cira-bearer-token=${token}; path=/; max-age=0; SameSite=Lax`;
+            return;
+        }
+
         const decodedToken: Maybe<{ id: number; exp: number }> =
             this._jwtHelper.decodeToken(token);
 

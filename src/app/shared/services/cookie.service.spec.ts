@@ -28,18 +28,18 @@ describe('CookieService', () => {
 
     describe('loadTokenFromCookie', () => {
         it('should return null when cookie is not found', () => {
-            const result = service.loadTokenFromCookie();
+            const result: Maybe<string> = service.loadTokenFromCookie();
             expect(result).toBeNull();
         });
 
         it('should return decoded token when cookie exists', () => {
             document.cookie = 'cira-bearer-token=test-token; path=/';
-            const result = service.loadTokenFromCookie();
+            const result: Maybe<string> = service.loadTokenFromCookie();
             expect(result).toBe('test-token');
         });
 
         it('should handle URI encoded tokens', () => {
-            const encodedToken = encodeURIComponent(
+            const encodedToken: string = encodeURIComponent(
                 'test.token+with/special=chars',
             );
             document.cookie = `cira-bearer-token=${encodedToken}; path=/`;
@@ -50,8 +50,11 @@ describe('CookieService', () => {
 
     describe('saveTokenToCookie', () => {
         it('should save token to cookie with correct parameters', () => {
-            const token = 'test-token';
-            const decodedToken = { id: 1, expiry_date: 2000 };
+            const token: string = 'test-token';
+            const decodedToken: { [key: string]: number } = {
+                id: 1,
+                expiry_date: 2000,
+            };
             vi.spyOn(jwtHelper, 'decodeToken').mockReturnValue(decodedToken);
             const cookieSetter = vi.spyOn(document, 'cookie', 'set');
 
@@ -63,6 +66,14 @@ describe('CookieService', () => {
                     expect.stringContaining('max-age=1000') &&
                     expect.stringContaining('SameSite=Lax'),
             );
+        });
+
+        it('should delete the cookie if token is falsy', () => {
+            const token: null = null;
+
+            service.saveTokenToCookie(token);
+
+            expect(document.cookie).toBe('');
         });
 
         it('should throw error when token cannot be decoded', () => {

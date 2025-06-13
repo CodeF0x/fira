@@ -10,11 +10,13 @@ import { of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoginFormFields } from './login.form';
 import { describe, beforeEach, it, expect, vi } from 'vitest';
+import { Session } from '../../core/session';
 
 describe('LoginComponent', () => {
     let fixture: ComponentFixture<LoginComponent>;
     let component: LoginComponent;
     let loginService: LoginService;
+    let session: Session;
     let messageService: MessageService;
     let cookieService: CookieService;
     let router: Router;
@@ -35,7 +37,8 @@ describe('LoginComponent', () => {
             })
             .mock(Router, {
                 navigate: vi.fn().mockResolvedValue(true),
-            });
+            })
+            .mock(Session);
     });
 
     beforeEach(() => {
@@ -44,6 +47,7 @@ describe('LoginComponent', () => {
         loginService = TestBed.inject(LoginService);
         messageService = TestBed.inject(MessageService);
         cookieService = TestBed.inject(CookieService);
+        session = TestBed.inject(Session);
         router = TestBed.inject(Router);
     });
 
@@ -77,10 +81,11 @@ describe('LoginComponent', () => {
         it('should save token and navigate on successful login', () => {
             const token = 'test-token';
             vi.spyOn(loginService, 'signIn').mockReturnValueOnce(of(token));
+            vi.spyOn(session, 'setNewToken');
 
             component.onLogin();
 
-            expect(cookieService.saveTokenToCookie).toHaveBeenCalledWith(token);
+            expect(session.setNewToken).toHaveBeenCalledWith(token);
             expect(router.navigate).toHaveBeenCalledWith(['']);
         });
 

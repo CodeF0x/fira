@@ -18,7 +18,7 @@ import { Router, RouterLink } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { catchError, EMPTY } from 'rxjs';
-import { CookieService } from '../../shared/services/cookie.service';
+import { Session } from '../../core/session';
 
 @Component({
     selector: 'app-login',
@@ -57,7 +57,7 @@ export class LoginComponent {
     private readonly _messageService: MessageService = inject(MessageService);
     private readonly _translateService: TranslateService =
         inject(TranslateService);
-    private readonly _cookieService: CookieService = inject(CookieService);
+    private readonly _session: Session = inject(Session);
     private readonly _router: Router = inject(Router);
 
     onLogin(): void {
@@ -102,7 +102,7 @@ export class LoginComponent {
                 }),
             )
             .subscribe((token) => {
-                this._cookieService.saveTokenToCookie(token);
+                this._session.setNewToken(token);
                 this._router.navigate(['']);
             });
     }
