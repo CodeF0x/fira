@@ -64,7 +64,7 @@ jobs:
                   key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
 
             - name: Add npm binaries to PATH
-              run: echo "$HOME/fira/node_modules/.bin" >> $GITHUB_PATH
+              run: echo "$PWD/node_modules/.bin" >> $GITHUB_PATH
 
             - name: Run Tests with Coverage
               run: npm run test:ci
