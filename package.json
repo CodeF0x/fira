@@ -6,8 +6,8 @@
         "start": "ng serve",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
-        "test": "vitest",
-        "test:ci": "vitest run --coverage",
+        "test": "./node_modules/.bin/vitest",
+        "test:ci": "./node_modules/.bin/vitest run --coverage",
         "format": " ./node_modules/prettier/bin/prettier.cjs --write .",
         "lint": " ./node_modules/prettier/bin/prettier.cjs --check ."
     },
