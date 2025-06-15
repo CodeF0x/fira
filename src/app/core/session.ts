@@ -17,6 +17,9 @@ export class Session {
         }
         return !this._jwtHelperService.isTokenExpired(this._userToken()!);
     });
+    readonly userToken: Signal<Maybe<string>> = computed(() =>
+        this._userToken(),
+    );
 
     private readonly _jwtHelperService: JwtHelperService =
         inject(JwtHelperService);

@@ -41,6 +41,17 @@
                     "ERROR": "Signup up has failed, please try again later."
                 }
             }
+        },
+        "LOGOUT": {
+            "LOGOUT": "Logout",
+            "MESSAGES": {
+                "TITLES": {
+                    "ERROR": "Logout failed"
+                },
+                "BODIES": {
+                    "ERROR": "Please try again later."
+                }
+            }
         }
     }
 }
