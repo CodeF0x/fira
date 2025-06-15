@@ -6,10 +6,10 @@
         "start": "ng serve",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
-        "test": "./node_modules/.bin/vitest",
-        "test:ci": "./node_modules/.bin/vitest run --coverage",
-        "format": " ./node_modules/prettier/bin/prettier.cjs --write .",
-        "lint": " ./node_modules/prettier/bin/prettier.cjs --check ."
+        "test": "npx vitest",
+        "test:ci": "npx vitest run --coverage",
+        "format": "npx prettier --write .",
+        "lint": "npx prettier --check ."
     },
     "private": true,
     "dependencies": {
