@@ -29,7 +29,6 @@ export class CookieService {
 
         const now: number = Math.floor(Date.now() / 1000);
         const maxAge: number = exp - now;
-        console.log(maxAge);
 
         document.cookie = `cira-bearer-token=${token}; path=/; max-age=${maxAge}; SameSite=Lax`;
     }

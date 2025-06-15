@@ -1,13 +1,13 @@
-import { defineConfig } from 'vitest/config';
-import angular from '@analogjs/vite-plugin-angular';
+import { defineConfig } from "vitest/config";
+import angular from "@analogjs/vite-plugin-angular";
 
 export default defineConfig({
     plugins: [angular()],
     test: {
         globals: true,
-        environment: 'jsdom',
-        setupFiles: ['src/test-setup.ts'],
-        include: ['**/*.spec.ts'],
+        environment: "jsdom",
+        setupFiles: ["src/test-setup.ts"],
+        include: ["**/*.spec.ts"],
         server: {
             deps: {
                 inline: [/^(?!.*\\.{css,less,scss}$).*$/],
@@ -15,6 +15,6 @@ export default defineConfig({
         },
     },
     resolve: {
-        conditions: ['development'],
+        conditions: ["development"],
     },
 });

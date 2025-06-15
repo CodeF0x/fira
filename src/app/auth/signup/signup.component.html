@@ -63,7 +63,11 @@
                 (click)="onSignup()"
                 [disabled]="!form.valid"
             />
-            <a [routerLink]="['/login']" class="text-sm text-[#34d399] hover:text-[#2bb382]">{{ 'PAGE_CONTENT.SIGNUP_PAGE.LOGIN_LINK' | translate }}</a>
+            <a
+                [routerLink]="['/login']"
+                class="text-sm text-[#34d399] hover:text-[#2bb382]"
+                >{{ "PAGE_CONTENT.SIGNUP_PAGE.LOGIN_LINK" | translate }}</a
+            >
         </div>
     </form>
 </div>
