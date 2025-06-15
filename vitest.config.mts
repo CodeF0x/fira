@@ -13,6 +13,16 @@ export default defineConfig({
                 inline: [/^(?!.*\\.{css,less,scss}$).*$/],
             },
         },
+        coverage: {
+            reporter: ["text", "json-summary", "json"],
+            reportOnFailure: true,
+            thresholds: {
+                lines: 80,
+                branches: 80,
+                functions: 80,
+                statements: 80,
+            },
+        },
     },
     resolve: {
         conditions: ["development"],
