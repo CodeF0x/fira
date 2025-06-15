@@ -23,27 +23,17 @@ jobs:
                   node-version: 20.x
                   cache: npm
 
-            - name: Install dependencies
-              run: npm ci
-
-            - name: Cache node_modules
-              uses: actions/cache@v4
-              with:
-                  path: node_modules
-                  key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-
     lint:
         name: Lint Code
         needs: setup
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-
-            - name: Restore node_modules cache
-              uses: actions/cache@v4
               with:
-                  path: node_modules
-                  key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+                  fetch-depth: 0
+
+            - name: Install dependencies
+              run: npm ci
 
             - name: Run lint
               run: npm run lint
@@ -57,11 +47,8 @@ jobs:
               with:
                   fetch-depth: 0
 
-            - name: Restore node_modules cache
-              uses: actions/cache@v4
-              with:
-                  path: node_modules
-                  key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+            - name: Install dependencies
+              run: npm ci
 
             - name: Add npm binaries to PATH
               run: echo "$PWD/node_modules/.bin" >> $GITHUB_PATH
