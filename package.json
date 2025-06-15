@@ -6,8 +6,8 @@
         "start": "ng serve",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
-        "test": "npx vitest",
-        "test:ci": "npx vitest run --coverage",
+        "test": "vitest",
+        "test:ci": "vitest run --coverage",
         "format": "npx prettier --write .",
         "lint": "npx prettier --check ."
     },
