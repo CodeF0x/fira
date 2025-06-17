@@ -1,0 +1,20 @@
+<form [formGroup]="form">
+    <p-float-label>
+        <input
+            id="title"
+            type="text"
+            pInputText
+            [formControlName]="CreateTicketFormFields.TITLE"
+        />
+        <label for="title">Title</label>
+    </p-float-label>
+    <p-editor [formControlName]="CreateTicketFormFields.BODY" />
+    <p-multiSelect
+        [options]="labels"
+        optionLabel="display"
+        optionValue="label"
+        display="chip"
+        [formControlName]="CreateTicketFormFields.LABELS"
+    />
+    <p-button label="Create" (click)="onSubmit()" [disabled]="form.invalid" />
+</form>
