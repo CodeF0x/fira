@@ -1,0 +1,101 @@
+<div class="flex items-center justify-center min-h-screen">
+    <p-card
+        class="w-4/5 p-6 flex flex-col"
+        [header]="'PAGE_CONTENT.CREATE_TICKET_PAGE.HEADER' | translate"
+    >
+        <form [formGroup]="form">
+            <div class="flex h-full">
+                <!-- Left Column -->
+                <div class="flex flex-col gap-4 w-4/5 pr-4 border-r">
+                    <div>
+                        <p-float-label>
+                            <input
+                                id="title"
+                                type="text"
+                                pInputText
+                                [formControlName]="CreateTicketFormFields.TITLE"
+                                class="w-full"
+                            />
+                            <label for="title">{{
+                                "PAGE_CONTENT.CREATE_TICKET_PAGE.FORM.TITLE.LABEL"
+                                    | translate
+                            }}</label>
+                        </p-float-label>
+                    </div>
+
+                    <div class="flex-grow">
+                        <p-editor
+                            [formControlName]="CreateTicketFormFields.BODY"
+                            class="w-full h-full"
+                            [style]="{ height: '500px' }"
+                        ></p-editor>
+                    </div>
+
+                    <div>
+                        <p-button
+                            [label]="
+                                'PAGE_CONTENT.CREATE_TICKET_PAGE.FORM.SUBMIT.LABEL'
+                                    | translate
+                            "
+                            (click)="onSubmit()"
+                            [disabled]="form.invalid"
+                            class="w-full"
+                        ></p-button>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="flex flex-col gap-4 w-1/5 pl-4">
+                    <div>
+                        <p-multiSelect
+                            [options]="labels"
+                            optionLabel="display"
+                            optionValue="label"
+                            display="chip"
+                            [formControlName]="CreateTicketFormFields.LABELS"
+                            class="w-full"
+                            [placeholder]="
+                                'PAGE_CONTENT.CREATE_TICKET_PAGE.FORM.LABELS.PLACEHOLDER'
+                                    | translate
+                            "
+                        ></p-multiSelect>
+                    </div>
+
+                    <div>
+                        <p-autoComplete
+                            [formControlName]="
+                                CreateTicketFormFields.ASSIGNED_USER
+                            "
+                            optionValue="email"
+                            optionLabel="displayName"
+                            [dropdown]="true"
+                            [suggestions]="filteredUsers()"
+                            (completeMethod)="filterUsers($event.query)"
+                            styleClass="w-full"
+                            [placeholder]="
+                                'PAGE_CONTENT.CREATE_TICKET_PAGE.FORM.ASSIGNED_USER.PLACEHOLDER'
+                                    | translate
+                            "
+                        >
+                            <ng-template let-user #item>
+                                <div class="flex items-center gap-2">
+                                    <div>
+                                        {{ `${user.displayName} (${user.email})` }}
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template #header>
+                                <div class="font-medium px-3 py-2">
+                                    {{
+                                        "PAGE_CONTENT.CREATE_TICKET_PAGE.FORM.ASSIGNED_USER.HEADER"
+                                            | translate
+                                    }}
+                                </div>
+                            </ng-template>
+                        </p-autoComplete>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-card>
+</div>
