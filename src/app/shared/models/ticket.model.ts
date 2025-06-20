@@ -5,8 +5,8 @@ export interface TicketModel {
     created: string;
     lastModified: string;
     labels: Maybe<TicketLabels>;
-    assignedUser: number;
-    status: TicketStatus | null;
+    assignedUser: number | null;
+    status: TicketStatus;
 }
 
 export enum TicketLabel {
@@ -26,5 +26,5 @@ export type TicketLabels = ReadonlyArray<TicketLabel>;
 export type Ticket = Readonly<TicketModel>;
 export type Tickets = ReadonlyArray<TicketModel>;
 export type CreateTicket = Readonly<
-    Omit<TicketModel, 'id' | 'status' | 'created' | 'lastModified'>
+    Omit<TicketModel, 'id' | 'created' | 'lastModified'>
 >;

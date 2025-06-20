@@ -12,5 +12,5 @@ export interface CreateTicketForm {
     [CreateTicketFormFields.TITLE]: FormControl<string>;
     [CreateTicketFormFields.BODY]: FormControl<string>;
     [CreateTicketFormFields.LABELS]: FormControl<TicketLabels>;
-    [CreateTicketFormFields.ASSIGNED_USER]: FormControl<number | null>;
+    [CreateTicketFormFields.ASSIGNED_USER]: FormControl<string | null>;
 }

@@ -1,4 +1,10 @@
-import { Component } from '@angular/core';
+import {
+    Component,
+    inject,
+    signal,
+    Signal,
+    WritableSignal,
+} from '@angular/core';
 import { CreateTicketForm, CreateTicketFormFields } from './create-ticket.form';
 import {
     FormControl,
@@ -15,7 +21,13 @@ import {
     CreateTicket,
     TicketLabel,
     TicketLabels,
+    TicketStatus,
 } from '../../shared/models/ticket.model';
+import { Users } from '../../shared/models/user.model';
+import { UserService } from '../../shared/services/user.service';
+import { AutoComplete } from 'primeng/autocomplete';
+import { Card } from 'primeng/card';
+import { TranslatePipe } from '@ngx-translate/core';
 
 type LabelMultiSelectOptions = {
     label: TicketLabel;
@@ -31,7 +43,9 @@ type LabelMultiSelectOptions = {
         Editor,
         Button,
         MultiSelect,
-        MultiSelect,
+        AutoComplete,
+        Card,
+        TranslatePipe,
     ],
     templateUrl: './create-ticket.component.html',
     styleUrl: './create-ticket.component.scss',
@@ -48,6 +62,9 @@ export class CreateTicketComponent {
         { label: TicketLabel.WONT_FIX, display: 'Wont fix' },
         { label: TicketLabel.IN_PROGRESS, display: 'In progress' },
     ];
+    readonly availableUsers: Signal<Maybe<Users>> =
+        inject(UserService).allUsers;
+    readonly filteredUsers: WritableSignal<Users> = signal<Users>([]);
     readonly form: FormGroup<CreateTicketForm> =
         new FormGroup<CreateTicketForm>({
             [CreateTicketFormFields.TITLE]: new FormControl('', {
@@ -61,10 +78,29 @@ export class CreateTicketComponent {
             [CreateTicketFormFields.LABELS]: new FormControl([], {
                 nonNullable: true,
             }),
-            [CreateTicketFormFields.ASSIGNED_USER]: new FormControl(null, {
+            [CreateTicketFormFields.ASSIGNED_USER]: new FormControl('', {
                 nonNullable: false,
             }),
         });
+
+    filterUsers(query?: string): void {
+        const allUsers = this.availableUsers();
+
+        if (!allUsers) {
+            this.filteredUsers.set([]);
+            return;
+        }
+
+        const lowercaseQuery = query?.toLowerCase() ?? '';
+
+        const filtered = allUsers.filter(
+            (user) =>
+                user.displayName.toLowerCase().includes(lowercaseQuery) ||
+                user.email.toLowerCase().includes(lowercaseQuery),
+        );
+
+        this.filteredUsers.set(filtered);
+    }
 
     onSubmit(): void {
         if (this.form.invalid) {
@@ -74,13 +110,17 @@ export class CreateTicketComponent {
         const body: string = this.form.value[CreateTicketFormFields.BODY]!;
         const labels: TicketLabels =
             this.form.value[CreateTicketFormFields.LABELS]!;
-        const assignedUser: null | number =
+        const assignedUser: null | string =
             this.form.value[CreateTicketFormFields.ASSIGNED_USER]!;
         const newTicket: CreateTicket = {
             title,
             body,
             labels,
-            assignedUser,
+            assignedUser:
+                this.availableUsers()?.find(
+                    (user) => user.email === assignedUser,
+                )?.id ?? null,
+            status: TicketStatus.OPEN,
         };
         console.log(newTicket);
     }

@@ -52,6 +52,33 @@
                     "ERROR": "Please try again later."
                 }
             }
+        },
+        "CREATE_TICKET_PAGE": {
+            "HEADER": "Create new ticket",
+            "FORM": {
+                "TITLE": {
+                    "LABEL": "Title",
+                    "PLACEHOLDER": "Enter title"
+                },
+                "LABELS": {
+                    "PLACEHOLDER": "Select labels",
+                    "HEADER": "Available Labels",
+                    "OPTIONS": {
+                        "BUG": "Bug",
+                        "QUESTION": "Question",
+                        "FEATURE": "Feature",
+                        "WONT_FIX": "Wont fix",
+                        "IN_PROGRESS": "In progress"
+                    }
+                },
+                "ASSIGNED_USER": {
+                    "PLACEHOLDER": "Select user",
+                    "HEADER": "Available Users"
+                },
+                "SUBMIT": {
+                    "LABEL": "Create"
+                }
+            }
         }
     }
 }
