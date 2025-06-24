@@ -14,6 +14,14 @@ export const routes: Routes = [
         canActivate: [hasValidSessionGuard],
     },
     {
+        path: 'new',
+        loadComponent: () =>
+            import('./tickets/create-ticket/create-ticket.component').then(
+                (c) => c.CreateTicketComponent,
+            ),
+        canActivate: [hasValidSessionGuard],
+    },
+    {
         path: 'login',
         component: LoginComponent,
         canActivate: [hasInvalidOrNoSessionGuard],
