@@ -10,6 +10,8 @@ import { TicketLabel, TicketStatus } from '../../shared/models/ticket.model';
 import { Users } from '../../shared/models/user.model';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('CreateTicketComponent', () => {
     const mockTranslations: Record<string, string> = {
@@ -22,6 +24,8 @@ describe('CreateTicketComponent', () => {
             'Wont fix',
         'PAGE_CONTENT.CREATE_TICKET_PAGE.FORM.LABELS.OPTIONS.IN_PROGRESS':
             'In progress',
+        'PAGE_CONTENT.CREATE_TICKET_PAGE.MESSAGES.TITLES.ERROR': 'Error Title',
+        'PAGE_CONTENT.CREATE_TICKET_PAGE.MESSAGES.BODIES.ERROR': 'Error Body',
     };
 
     const mockUsers: Users = [
@@ -32,8 +36,8 @@ describe('CreateTicketComponent', () => {
     let fixture: ComponentFixture<CreateTicketComponent>;
     let component: CreateTicketComponent;
     let messageService: MessageService;
-    let translateService: TranslateService;
     let ticketsService: TicketsService;
+    let router: Router;
 
     beforeEach(() =>
         MockBuilder(CreateTicketComponent)
@@ -60,7 +64,12 @@ describe('CreateTicketComponent', () => {
                     createTicket: vi.fn().mockReturnValue(of({})),
                 },
             })
-            .mock(MessageService),
+            .mock(MessageService, {
+                add: vi.fn(),
+            })
+            .mock(Router, {
+                navigate: vi.fn(),
+            }),
     );
 
     beforeEach(() => {
@@ -68,7 +77,7 @@ describe('CreateTicketComponent', () => {
         component = fixture.componentInstance;
         messageService = TestBed.inject(MessageService);
         ticketsService = TestBed.inject(TicketsService);
-        translateService = TestBed.inject(TranslateService);
+        router = TestBed.inject(Router);
     });
 
     it('should initialize labels with translations', () => {
@@ -99,7 +108,9 @@ describe('CreateTicketComponent', () => {
         expect(ticketsService.createTicket).not.toHaveBeenCalled();
     });
 
-    it('should submit ticket correctly when form is valid', () => {
+    it('should submit ticket correctly when form is valid and redirect to tickets list', () => {
+        vi.spyOn(router, 'navigate');
+
         component.form.setValue({
             [CreateTicketFormFields.TITLE]: 'Test Title',
             [CreateTicketFormFields.BODY]: 'Test Body',
@@ -116,14 +127,13 @@ describe('CreateTicketComponent', () => {
             assigned_user: 1,
             status: TicketStatus.OPEN,
         });
+        expect(router.navigate).toHaveBeenCalledWith(['']);
     });
 
     it('should handle error on submit', () => {
-        vi.spyOn(messageService, 'add');
-        vi.spyOn(ticketsService, 'createTicket').mockReturnValue(
-            throwError(() => new Error('test error')),
+        vi.spyOn(ticketsService, 'createTicket').mockReturnValueOnce(
+            throwError(() => new HttpErrorResponse({ status: 500 })),
         );
-        vi.spyOn(translateService, 'instant').mockImplementation((key) => key);
 
         component.form.setValue({
             [CreateTicketFormFields.TITLE]: 'Test Title',
@@ -133,13 +143,13 @@ describe('CreateTicketComponent', () => {
         });
 
         component.onSubmit();
+
         expect(ticketsService.createTicket).toHaveBeenCalled();
         expect(messageService.add).toHaveBeenCalledWith(
             expect.objectContaining({
                 severity: 'error',
-                summary:
-                    'PAGE_CONTENT.CREATE_TICKET_PAGE.MESSAGES.TITLES.ERROR',
-                detail: 'PAGE_CONTENT.CREATE_TICKET_PAGE.MESSAGES.BODIES.ERROR',
+                summary: 'Error Title',
+                detail: 'Error Body',
                 sticky: false,
                 life: 3000,
             }),

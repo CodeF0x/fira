@@ -33,6 +33,7 @@ import { catchError, EMPTY } from 'rxjs';
 import { TicketsService } from '../../shared/services/tickets.service';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 
 type LabelMultiSelectOptions = {
     label: TicketLabel;
@@ -55,6 +56,7 @@ type LabelMultiSelectOptions = {
     ],
     templateUrl: './create-ticket.component.html',
     styleUrl: './create-ticket.component.scss',
+    providers: [MessageService],
 })
 export class CreateTicketComponent implements OnInit {
     readonly CreateTicketFormFields: typeof CreateTicketFormFields =
@@ -87,6 +89,7 @@ export class CreateTicketComponent implements OnInit {
 
     private readonly _ticketService: TicketsService = inject(TicketsService);
     private readonly _messageService: MessageService = inject(MessageService);
+    private readonly _router: Router = inject(Router);
 
     // translations are not loaded yet when initializing labels instantly
     ngOnInit() {
@@ -197,6 +200,6 @@ export class CreateTicketComponent implements OnInit {
                     return EMPTY;
                 }),
             )
-            .subscribe();
+            .subscribe(() => this._router.navigate(['']));
     }
 }
