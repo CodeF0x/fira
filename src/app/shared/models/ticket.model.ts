@@ -9,17 +9,6 @@ export interface TicketModel {
     status: TicketStatus;
 }
 
-export interface TicketResponseModel {
-    id: number;
-    title: string;
-    body: string;
-    created: string;
-    last_modified: string;
-    labels: Maybe<TicketLabels>;
-    assignedUser: number | null;
-    status: TicketStatus;
-}
-
 export enum TicketLabel {
     FEATURE = 'Feature',
     BUG = 'Bug',
@@ -42,4 +31,10 @@ export type CreateTicket = Readonly<
         assigned_user: null | number;
     }
 >;
-export type TicketResponse = Readonly<TicketResponseModel>;
+export type TicketResponse = Omit<
+    TicketModel,
+    'assignedUser' | 'lastModified'
+> & {
+    assigned_user: null | number;
+    last_modified: string;
+};

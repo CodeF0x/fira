@@ -26,6 +26,7 @@ export class TicketsService {
                     return {
                         ...ticket,
                         lastModified: ticket.last_modified,
+                        assignedUser: ticket.assigned_user,
                     };
                 }),
             );
