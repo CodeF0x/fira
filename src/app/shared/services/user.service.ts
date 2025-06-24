@@ -39,22 +39,4 @@ export class UserService {
                 ),
             ),
     );
-
-    // getAllUsers(): Observable<Users> {
-    //     return this._http
-    //         .get<UsersResponse>(`${this._config.baseUrl}/users`, {
-    //             headers: {
-    //                 Authorization: `Bearer ${this._session.userToken()}`,
-    //             },
-    //         })
-    //         .pipe(
-    //             map((users) =>
-    //                 users.map((user) => ({
-    //                     id: user.id,
-    //                     email: user.email,
-    //                     displayName: user.display_name,
-    //                 })),
-    //             ),
-    //         );
-    // }
 }

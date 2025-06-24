@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { Config } from '../../core/config';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { CreateTicket, Ticket } from '../models/ticket.model';
+import { map, Observable } from 'rxjs';
+import { CreateTicket, Ticket, TicketResponse } from '../models/ticket.model';
 import { Session } from '../../core/session';
 
 @Injectable({
@@ -17,12 +17,17 @@ export class TicketsService {
         const headers = new HttpHeaders({
             Authorization: `Bearer ${this._session.userToken()}`,
         });
-        return this._http.post<Ticket>(
-            this._config.baseUrl + '/tickets',
-            ticket,
-            {
+        return this._http
+            .post<TicketResponse>(this._config.baseUrl + '/tickets', ticket, {
                 headers,
-            },
-        );
+            })
+            .pipe(
+                map((ticket) => {
+                    return {
+                        ...ticket,
+                        lastModified: ticket.last_modified,
+                    };
+                }),
+            );
     }
 }

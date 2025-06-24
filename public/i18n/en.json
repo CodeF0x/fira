@@ -54,6 +54,14 @@
             }
         },
         "CREATE_TICKET_PAGE": {
+            "MESSAGES": {
+                "BODIES": {
+                    "ERROR": "Could not create ticket, please try again later."
+                },
+                "TITLES": {
+                    "ERROR": "Error creating ticket"
+                }
+            },
             "HEADER": "Create new ticket",
             "FORM": {
                 "TITLE": {

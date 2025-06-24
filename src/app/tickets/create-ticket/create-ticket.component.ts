@@ -1,6 +1,7 @@
 import {
     Component,
     inject,
+    OnInit,
     signal,
     Signal,
     WritableSignal,
@@ -27,7 +28,11 @@ import { Users } from '../../shared/models/user.model';
 import { UserService } from '../../shared/services/user.service';
 import { AutoComplete } from 'primeng/autocomplete';
 import { Card } from 'primeng/card';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { catchError, EMPTY } from 'rxjs';
+import { TicketsService } from '../../shared/services/tickets.service';
+import { Toast } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 type LabelMultiSelectOptions = {
     label: TicketLabel;
@@ -46,22 +51,19 @@ type LabelMultiSelectOptions = {
         AutoComplete,
         Card,
         TranslatePipe,
+        Toast,
     ],
     templateUrl: './create-ticket.component.html',
     styleUrl: './create-ticket.component.scss',
 })
-export class CreateTicketComponent {
+export class CreateTicketComponent implements OnInit {
     readonly CreateTicketFormFields: typeof CreateTicketFormFields =
         CreateTicketFormFields;
 
-    readonly labels: LabelMultiSelectOptions = [
-        { label: TicketLabel.BUG, display: 'Bug' },
-        { label: TicketLabel.DONE, display: 'Question' },
-        { label: TicketLabel.FEATURE, display: 'Feature' },
-        { label: TicketLabel.FEATURE, display: 'Feature' },
-        { label: TicketLabel.WONT_FIX, display: 'Wont fix' },
-        { label: TicketLabel.IN_PROGRESS, display: 'In progress' },
-    ];
+    private readonly _translateService: TranslateService =
+        inject(TranslateService);
+
+    readonly labels: WritableSignal<LabelMultiSelectOptions> = signal([]);
     readonly availableUsers: Signal<Maybe<Users>> =
         inject(UserService).allUsers;
     readonly filteredUsers: WritableSignal<Users> = signal<Users>([]);
@@ -82,6 +84,60 @@ export class CreateTicketComponent {
                 nonNullable: false,
             }),
         });
+
+    private readonly _ticketService: TicketsService = inject(TicketsService);
+    private readonly _messageService: MessageService = inject(MessageService);
+
+    // translations are not loaded yet when initializing labels instantly
+    ngOnInit() {
+        this._translateService
+            .get([
+                'PAGE_CONTENT.CREATE_TICKET_PAGE.FORM.LABELS.OPTIONS.BUG',
+                'PAGE_CONTENT.CREATE_TICKET_PAGE.FORM.LABELS.OPTIONS.QUESTION',
+                'PAGE_CONTENT.CREATE_TICKET_PAGE.FORM.LABELS.OPTIONS.FEATURE',
+                'PAGE_CONTENT.CREATE_TICKET_PAGE.FORM.LABELS.OPTIONS.WONT_FIX',
+                'PAGE_CONTENT.CREATE_TICKET_PAGE.FORM.LABELS.OPTIONS.IN_PROGRESS',
+            ])
+            .subscribe((translations) => {
+                this.labels.set([
+                    {
+                        label: TicketLabel.BUG,
+                        display:
+                            translations[
+                                'PAGE_CONTENT.CREATE_TICKET_PAGE.FORM.LABELS.OPTIONS.BUG'
+                            ],
+                    },
+                    {
+                        label: TicketLabel.DONE,
+                        display:
+                            translations[
+                                'PAGE_CONTENT.CREATE_TICKET_PAGE.FORM.LABELS.OPTIONS.QUESTION'
+                            ],
+                    },
+                    {
+                        label: TicketLabel.FEATURE,
+                        display:
+                            translations[
+                                'PAGE_CONTENT.CREATE_TICKET_PAGE.FORM.LABELS.OPTIONS.FEATURE'
+                            ],
+                    },
+                    {
+                        label: TicketLabel.WONT_FIX,
+                        display:
+                            translations[
+                                'PAGE_CONTENT.CREATE_TICKET_PAGE.FORM.LABELS.OPTIONS.WONT_FIX'
+                            ],
+                    },
+                    {
+                        label: TicketLabel.IN_PROGRESS,
+                        display:
+                            translations[
+                                'PAGE_CONTENT.CREATE_TICKET_PAGE.FORM.LABELS.OPTIONS.IN_PROGRESS'
+                            ],
+                    },
+                ]);
+            });
+    }
 
     filterUsers(query?: string): void {
         const allUsers = this.availableUsers();
@@ -116,12 +172,31 @@ export class CreateTicketComponent {
             title,
             body,
             labels,
-            assignedUser:
+            assigned_user:
                 this.availableUsers()?.find(
                     (user) => user.email === assignedUser,
                 )?.id ?? null,
             status: TicketStatus.OPEN,
         };
-        console.log(newTicket);
+        this._ticketService
+            .createTicket(newTicket)
+            .pipe(
+                catchError(() => {
+                    this._messageService.add({
+                        severity: 'error',
+                        summary: this._translateService.instant(
+                            'PAGE_CONTENT.CREATE_TICKET_PAGE.MESSAGES.TITLES.ERROR',
+                        ),
+                        detail: this._translateService.instant(
+                            'PAGE_CONTENT.CREATE_TICKET_PAGE.MESSAGES.BODIES.ERROR',
+                        ),
+                        sticky: false,
+                        life: 3000,
+                    });
+
+                    return EMPTY;
+                }),
+            )
+            .subscribe();
     }
 }

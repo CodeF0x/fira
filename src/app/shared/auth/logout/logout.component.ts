@@ -6,10 +6,11 @@ import { MessageService } from 'primeng/api';
 import { Session } from '../../../core/session';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { Toast } from 'primeng/toast';
 
 @Component({
     selector: 'app-logout',
-    imports: [Button, TranslatePipe],
+    imports: [Button, TranslatePipe, Toast],
     templateUrl: './logout.component.html',
     styleUrl: './logout.component.scss',
     providers: [LogoutService, MessageService],
