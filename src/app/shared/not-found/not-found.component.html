@@ -1,0 +1,48 @@
+<div class="min-h-screen flex items-center justify-center px-4">
+    <p-card styleClass="w-full max-w-md">
+        <ng-template pTemplate="content">
+            <div class="text-center">
+                <!-- 404 Number -->
+                <div class="mb-8">
+                    <h1 class="text-9xl font-bold text-primary leading-none">
+                        404
+                    </h1>
+                    <div
+                        class="w-24 h-1 bg-primary mx-auto mt-4 rounded-full"
+                    ></div>
+                </div>
+
+                <!-- Error Message -->
+                <div class="mb-8">
+                    <h2 class="text-2xl font-semibold text-color mb-2">
+                        Page Not Found
+                    </h2>
+                    <p class="text-color-secondary leading-relaxed">
+                        Sorry, the page you're looking for doesn't exist or has
+                        been moved.
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="gap-4 flex justify-center">
+                    <p-button
+                        (onClick)="goBack()"
+                        label="Go Back"
+                        icon="pi pi-arrow-left"
+                        styleClass="w-full"
+                    >
+                    </p-button>
+
+                    <p-button
+                        (onClick)="goHome()"
+                        label="Go to Homepage"
+                        icon="pi pi-home"
+                        severity="secondary"
+                        styleClass="w-full"
+                    >
+                    </p-button>
+                </div>
+            </div>
+        </ng-template>
+    </p-card>
+</div>
