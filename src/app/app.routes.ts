@@ -31,4 +31,11 @@ export const routes: Routes = [
         component: SignupComponent,
         canActivate: [hasInvalidOrNoSessionGuard],
     },
+    {
+        path: '**',
+        loadComponent: () =>
+            import('./shared/not-found/not-found.component').then(
+                (c) => c.NotFoundComponent,
+            ),
+    },
 ];
